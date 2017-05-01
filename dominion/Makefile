@@ -1,4 +1,4 @@
-CFLAGS = -Wall -fpic -coverage -lm
+CFLAGS = -Wall -fpic -coverage -lm -std=c99
 
 rngs.o: rngs.h rngs.c
 	gcc -c rngs.c -g  $(CFLAGS)
@@ -24,7 +24,18 @@ testAll: dominion.o testSuite.c
 interface.o: interface.h interface.c
 	gcc -c interface.c -g  $(CFLAGS)
 
-runtests: testDrawCard 
+unittestresults.out: unittest1.c unittest2.c dominion.c rngs.c
+		echo "Result for running unit tests:" >  unittestresults.out
+		echo "unittest1.c:" >>  unittestresults.out
+		gcc -o unittest1 dominion.c rngs.c unittest1.c $(CFLAGS)
+		unittest1 >>  unittestresults.out
+		gcov -b dominion.c >>  unittestresults.out
+		echo "unittest2.c:" >>  unittestresults.out
+		gcc -o unittest2 dominion.c rngs.c unittest2.c $(CFLAGS)
+		unittest2 >>  unittestresults.out
+		gcov -b dominion.c >>  unittestresults.out
+
+runtests: testDrawCard
 	./testDrawCard &> unittestresult.out
 	gcov dominion.c >> unittestresult.out
 	cat dominion.c.gcov >> unittestresult.out
@@ -36,4 +47,4 @@ player: player.c interface.o
 all: playdom player testDrawCard testBuyCard badTestDrawCard
 
 clean:
-	rm -f *.o playdom.exe playdom test.exe test player player.exe testInit testInit.exe *.gcov *.gcda *.gcno *.so
+	rm -f *.o *.out playdom.exe playdom test.exe test player player.exe testInit testInit.exe *.gcov *.gcda *.gcno *.so
