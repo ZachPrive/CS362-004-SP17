@@ -643,15 +643,28 @@ int getCost(int cardNumber)
   return -1;
 }
 
-int playAdventurer(){
-  while(drawntreasure>2){
+int playAdventurer(struct gameState *state){
+      int i;
+      int j;
+      int k;
+      int x;
+      int index;
+      int currentPlayer = whoseTurn(state);
+      int nextPlayer = currentPlayer + 1;
+      int tributeRevealedCards[2] = {-1, -1};
+      int temphand[MAX_HAND];// moved above the if statement
+      int drawntreasure=0;
+      int cardDrawn;
+      int z = 0;// this is the counter for the temp hand
+  while(drawntreasure<1){
   if (state->deckCount[currentPlayer] <1){//if the deck is empty we need to shuffle discard and add to deck
     shuffle(currentPlayer, state);
   }
   drawCard(currentPlayer, state);
   cardDrawn = state->hand[currentPlayer][state->handCount[currentPlayer]-1];//top card of hand is most recently drawn card.
   if (cardDrawn == copper || cardDrawn == silver || cardDrawn == gold)
-    drawntreasure++;
+    {drawntreasure++;
+    state->coins++;}
   else{
     temphand[z]=cardDrawn;
     state->handCount[currentPlayer]--; //this should just remove the top card (the most recently drawn one).
@@ -665,7 +678,19 @@ int playAdventurer(){
   return 0;
 }
 
-int playCouncilRoom(){
+int playCouncilRoom(struct gameState *state, int handPos){
+      int i;
+      int j;
+      int k;
+      int x;
+      int index;
+      int currentPlayer = whoseTurn(state);
+      int nextPlayer = currentPlayer + 1;
+      int tributeRevealedCards[2] = {-1, -1};
+      int temphand[MAX_HAND];// moved above the if statement
+      int drawntreasure=0;
+      int cardDrawn;
+      int z = 0;// this is the counter for the temp hand
   //+4 Cards
   for (i = 0; i < 4; i++)
   {
@@ -690,7 +715,19 @@ int playCouncilRoom(){
   return 0;
   }
 
-  int playSmithy(){
+  int playSmithy(struct gameState *state, int handPos){
+        int i;
+        int j;
+        int k;
+        int x;
+        int index;
+        int currentPlayer = whoseTurn(state);
+        int nextPlayer = currentPlayer + 1;
+        int tributeRevealedCards[2] = {-1, -1};
+        int temphand[MAX_HAND];// moved above the if statement
+        int drawntreasure=0;
+        int cardDrawn;
+        int z = 0;// this is the counter for the temp hand
     //+3 Cards
     for (i = 0; i < 3; i+2)
     {
@@ -702,7 +739,19 @@ int playCouncilRoom(){
     return 0;
     }
 
-  int playVillage(){
+  int playVillage(struct gameState *state, int handPos){
+        int i;
+        int j;
+        int k;
+        int x;
+        int index;
+        int currentPlayer = whoseTurn(state);
+        int nextPlayer = currentPlayer + 1;
+        int tributeRevealedCards[2] = {-1, -1};
+        int temphand[MAX_HAND];// moved above the if statement
+        int drawntreasure=0;
+        int cardDrawn;
+        int z = 0;// this is the counter for the temp hand
     //+1 Card
     drawCard(currentPlayer, state);
 
@@ -714,7 +763,19 @@ int playCouncilRoom(){
     return 0;
     }
 
-   int playCutpurse(){
+   int playCutpurse(struct gameState *state, int handPos){
+         int i;
+         int j;
+         int k;
+         int x;
+         int index;
+         int currentPlayer = whoseTurn(state);
+         int nextPlayer = currentPlayer + 1;
+         int tributeRevealedCards[2] = {-1, -1};
+         int temphand[MAX_HAND];// moved above the if statement
+         int drawntreasure=0;
+         int cardDrawn;
+         int z = 0;// this is the counter for the temp hand
 
      updateCoins(currentPlayer, state, 2);
      for (i = 0; i < state->numPlayers; i++)
@@ -764,19 +825,19 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
   int cardDrawn;
   int z = 0;// this is the counter for the temp hand
   if (card== adventurer){
-        playAdventurer();
+        playAdventurer(state);
  }
   else if (card == council_room){
-        playCouncilRoom();
+        playCouncilRoom(state, 0);
  }
   else if (card == smithy){
-        playSmithy();
+        playSmithy(state, 0);
  }
   else if (card == village){
-        playVillage();
+        playVillage(state, 0);
  }
   else if (card == cutpurse){
-        playCutpurse();
+        playCutpurse(state, 0);
  }
   if (nextPlayer > (state->numPlayers - 1)){
     nextPlayer = 0;

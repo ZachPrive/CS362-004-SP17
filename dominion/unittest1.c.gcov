@@ -1,0 +1,44 @@
+        -:    0:Source:unittest1.c
+        -:    0:Graph:unittest1.gcno
+        -:    0:Data:unittest1.gcda
+        -:    0:Runs:15
+        -:    0:Programs:1
+        -:    1://test handCard
+        -:    2:
+        -:    3:#include "dominion.h"
+        -:    4:#include "dominion_helpers.h"
+        -:    5:#include <string.h>
+        -:    6:#include <stdio.h>
+        -:    7:#include <assert.h>
+        -:    8:#include "rngs.h"
+        -:    9:
+        -:   10:#define NOISY_TEST 1
+        -:   11:
+        -:   12:int main (){
+        -:   13:      struct gameState G;
+        -:   14:
+       15:   15:      int turn = 0;
+       15:   16:      int p = 0;
+        -:   17:      int r;
+       15:   18:      int k[10] = {adventurer, council_room, feast, gardens, mine,
+        -:   19:    	       remodel, smithy, village, baron, great_hall};
+        -:   20:
+       15:   21:      printf("Testing whoseTurn\n");
+        -:   22:
+      150:   23:      for (p=0; p<4; p++){
+        -:   24:            //clear gamestate
+       60:   25:            memset(&G, 23, sizeof(struct gameState));
+        -:   26:            //initialize the game
+       60:   27:            r = initializeGame(2, k, 1, &G);
+        -:   28:            //take current players turn from gamestate
+       60:   29:            G.whoseTurn = p;
+        -:   30:            //check return from the whoseturn function
+       60:   31:            turn = whoseTurn(&G);
+        -:   32:
+        -:   33:            //make sure they are the same
+      120:   34:            assert(turn == p);
+       60:   35:      }
+        -:   36:
+       15:   37:      printf("whoseTurn passed\n");
+       15:   38:      return 0;
+        -:   39:}
