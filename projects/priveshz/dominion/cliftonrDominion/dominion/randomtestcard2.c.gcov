@@ -1,0 +1,154 @@
+        -:    0:Source:randomtestcard2.c
+        -:    0:Graph:randomtestcard2.gcno
+        -:    0:Data:randomtestcard2.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1://
+        -:    2:// Created by Robert Clifton on 4/18/17.
+        -:    3://cardtest3  unit test for the council_rooom card function.
+        -:    4://
+        -:    5://to make and test: make randomtestcard2.out
+        -:    6://
+        -:    7://gcc dominion.c rngs.c randomtestcard2.c -o randomtestcard2
+        -:    8:
+        -:    9:#include "dominion.h"
+        -:   10:#include "dominion_helpers.h"
+        -:   11:#include <string.h>
+        -:   12:#include <stdio.h>
+        -:   13:#include <assert.h>
+        -:   14:#include "rngs.h"
+        -:   15:#include <stdlib.h>
+        -:   16:#include <math.h>
+        -:   17:#include <time.h>
+        -:   18:
+function main called 1 returned 100% blocks executed 85%
+        -:   19:int main() {
+        -:   20:
+        1:   21:    int pass = 1;
+        1:   22:    char testCard[] = "council_room";
+        -:   23:    struct gameState G, copyG;
+        -:   24:    //int k[10] = {adventurer, gardens, embargo, village, minion, mine, cutpurse, sea_hag, tribute, smithy};
+        -:   25:
+        1:   26:    int x = 1000;
+        -:   27:    int i, n, retVal;
+        1:   28:    int handPos = 0;
+        1:   29:    int choice1 = 0, choice2 = 0, choice3 = 0;
+        1:   30:    int bonus = 0;
+        -:   31:    int currentPlayer;
+        1:   32:    int addedCards = 4;
+        1:   33:    int discard = 1;
+        1:   34:    int addedBuys = 1;
+        1:   35:    int otherPlrAdded = 1;
+        -:   36:    int playerHand[4];
+        -:   37:    int copyPlayerHand[4];
+        -:   38:	int totalCards, copytotalCards;
+        -:   39:
+        -:   40:
+        -:   41:    //initialize game state
+        -:   42:    //initializeGame(numbPlayers, k, randSeed, &G);
+        -:   43:
+        -:   44:
+        -:   45:    //initialize random
+        1:   46:    srand(time(NULL));
+        -:   47:
+        -:   48:
+        1:   49:    printf("\n->->->    - TESTING CARD: %s -    <-<-<-\n", testCard);
+        -:   50:
+        1:   51:    printf ("----  -RANDOM TESTS- ----\n");
+     2002:   52:    for (i = 0; i < x; i++){
+branch  0 taken 1000
+branch  1 taken 1
+ 13152000:   53:        for (n = 0; n < sizeof(struct gameState)/ sizeof(int); n++) {
+branch  0 taken 6575000
+branch  1 taken 1000
+  6575000:   54:            ((int*)&G)[n] = rand() % 128;
+  6575000:   55:        }
+        -:   56:
+     1000:   57:        G.numPlayers = (rand() % 3)+2;
+     1000:   58:        G.whoseTurn = rand() % G.numPlayers;
+     1000:   59:        currentPlayer = whoseTurn(&G);
+     1000:   60:        G.handCount[currentPlayer] = (rand() % (MAX_HAND/2))+1;
+     1000:   61:        G.deckCount[currentPlayer] = (rand() % (MAX_DECK/2))+1;
+     1000:   62:        G.discardCount[currentPlayer] = (rand() % (MAX_DECK/2))+1;
+     1000:   63:        G.numBuys = 0;
+     1000:   64:        handPos = (rand() % G.handCount[currentPlayer]);
+        -:   65:
+        -:   66:
+        -:   67:
+     1000:   68:        memcpy(&copyG, &G, sizeof(struct gameState));
+        -:   69:
+        -:   70:
+     1000:   71:        retVal = cardEffect(council_room, choice1, choice2, choice3, &copyG, handPos, &bonus);
+     1000:   72:        if (retVal != 0) {
+branch  0 taken 0
+branch  1 taken 1000
+    #####:   73:            printf("Return Fail");
+    #####:   74:            pass = 0;
+    #####:   75:        };
+        -:   76:
+        -:   77:
+     1000:   78:        if (copyG.handCount[currentPlayer] != G.handCount[currentPlayer]+addedCards-discard){
+branch  0 taken 0
+branch  1 taken 1000
+    #####:   79:            pass = 0;
+    #####:   80:            printf("Hand Count: %d, Expected: %d \n\n", copyG.handCount[currentPlayer], G.handCount[currentPlayer]+addedCards-discard);
+    #####:   81:        }
+        -:   82:
+     1000:   83:		totalCards = G.deckCount[currentPlayer] + G.discardCount[currentPlayer];
+     1000:   84:		copytotalCards = copyG.deckCount[currentPlayer] + copyG.discardCount[currentPlayer];
+     1000:   85:		if (copytotalCards != totalCards - addedCards) {
+branch  0 taken 0
+branch  1 taken 1000
+    #####:   86:			pass = 0;
+    #####:   87:			printf("Total Cards: %d, Expected: %d \n\n", copytotalCards, totalCards-addedCards);
+    #####:   88:		};
+        -:   89:
+     1000:   90:        if (copyG.numBuys != G.numBuys + addedBuys) {
+branch  0 taken 0
+branch  1 taken 1000
+    #####:   91:            pass = 0;
+    #####:   92:            printf("Buy Count: %d, Expected: %d \n\n", copyG.numBuys, G.numBuys+addedBuys);
+    #####:   93:        }
+        -:   94:
+     7948:   95:        for (n = 0; n < G.numPlayers; n++) {
+branch  0 taken 2974
+branch  1 taken 1000
+     2974:   96:            if (n != currentPlayer) {
+branch  0 taken 1974
+branch  1 taken 1000
+     1974:   97:                copyPlayerHand[n] = copyG.handCount[n];
+     1974:   98:                playerHand[n] = G.handCount[n];
+     1974:   99:            }
+     2974:  100:        }
+        -:  101:
+        -:  102:
+     7948:  103:        for (n = 0; n < G.numPlayers; n++) {
+branch  0 taken 2974
+branch  1 taken 1000
+     2974:  104:            if (n != currentPlayer) {
+branch  0 taken 1974
+branch  1 taken 1000
+     1974:  105:                if (copyPlayerHand[n] != playerHand[n] + otherPlrAdded) {
+branch  0 taken 1
+branch  1 taken 1973
+        1:  106:                    pass = 0;
+        -:  107:                    //printf("%d, %d, %d, %d, %d", G.numPlayers, G.whoseTurn, G.handCount[currentPlayer], G.deckCount[currentPlayer], G.discardCount[currentPlayer]);
+        1:  108:					printf("Other Player Hand Count: %d, Expected: %d \n\n", copyPlayerHand[n],  playerHand[n] + otherPlrAdded);
+        1:  109:                }
+     1974:  110:            }
+     2974:  111:        }
+        -:  112:    
+     1000:  113:    }
+        -:  114:
+        -:  115:
+        -:  116:    //Final bool check to see if testing passed or failed,  prints result to standard out
+        1:  117:    if (pass) {
+branch  0 taken 0
+branch  1 taken 1
+    #####:  118:        printf("->->  - TEST SUCCESSFULLY COMPLETED -  <-<-\n");
+    #####:  119:    } else{
+        1:  120:        printf("->->  - TEST FAILED -  <-<-\n");
+        -:  121:    }
+        -:  122:
+        1:  123:    return 0;
+        -:  124:};

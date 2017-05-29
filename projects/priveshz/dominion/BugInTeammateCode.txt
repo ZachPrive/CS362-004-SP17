@@ -1,0 +1,74 @@
+Bugs in Robert Cliftons code
+==============================
+
+Title: HandCount Updated Incorrectly in Adventurer
+
+Class: Function Error
+
+Date:May 28, 2017
+Reported By:Zachary Prive Shereck
+
+Is it reproducible: Yes
+
+Description
+===========
+Rather than discarding a non-treasure card that is drawn and reducing the handcount, the handcount is increased by one. 
+
+
+Steps to Produce/Reproduce
+--------------------------
+Create gamestate
+pass information into cardEffect
+
+
+Expected Results
+----------------
+Updated handcount with one greater than start (+2 treasure, -1 adventurer card)
+
+
+Actual Results
+--------------
+Handcount much larger than +1, differentiating results depending on amount of iterations needed in adventurer play.
+
+
+Workarounds
+-----------
+N/A
+
+__________________________________________
+
+
+Title: One too many cards drawn in Smithy
+
+Class: Function Error
+
+Date:May 28, 2017
+Reported By:Zachary Prive Shereck
+
+Is it reproducible: Yes
+
+Description
+===========
+Rather than drawing three cards, Smithy draws 4.
+
+
+Steps to Produce/Reproduce
+--------------------------
+Create gamestate
+pass information into cardEffect
+
+
+Expected Results
+----------------
+Handcount = 7. Add three and minus one for smithy card
+
+
+Actual Results
+--------------
+Handcount = 8. Added four and subracted one
+
+
+Workarounds
+-----------
+N/A
+

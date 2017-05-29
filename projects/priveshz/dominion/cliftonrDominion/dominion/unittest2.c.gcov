@@ -1,0 +1,50 @@
+        -:    0:Source:unittest2.c
+        -:    0:Graph:unittest2.gcno
+        -:    0:Data:unittest2.gcda
+        -:    0:Runs:11
+        -:    0:Programs:1
+        -:    1://testing numHandCards
+        -:    2:
+        -:    3:#include "dominion.h"
+        -:    4:#include "dominion_helpers.h"
+        -:    5:#include <string.h>
+        -:    6:#include <stdio.h>
+        -:    7:#include <assert.h>
+        -:    8:#include "rngs.h"
+        -:    9:
+        -:   10:#define NOISY_TEST 1
+        -:   11:
+        -:   12:int main (){
+        -:   13:      struct gameState G;
+        -:   14:
+       11:   15:      int gamecount = 0;
+       11:   16:      int handcount = 5;
+        -:   17:      int r, p;
+       11:   18:      int k[10] = {adventurer, council_room, feast, gardens, mine,
+        -:   19:    	       remodel, smithy, village, baron, great_hall};
+        -:   20:
+       11:   21:      printf("Testing numHandCards\n");
+        -:   22:
+      110:   23:      for (p=0; p<4; p++){
+      528:   24:            for (handcount=0; handcount<5; handcount++){
+        -:   25:            //clear gamestate
+      220:   26:            memset(&G, 23, sizeof(struct gameState));
+        -:   27:            //initialize a game
+      220:   28:            r = initializeGame(2, k, 1, &G);
+        -:   29:            //take current players turn from gamestate
+      220:   30:            G.handCount[p] = handcount;
+        -:   31:            //check return from the whoseturn function
+      220:   32:            gamecount = numHandCards(&G);
+        -:   33:
+      220:   34:            printf("HANDCOUNT: %d\n", gamecount);
+        -:   35:
+        -:   36:            //make sure they are the same
+      220:   37:            if (gamecount != G.handCount[p]){
+      165:   38:                  printf("NUMHANDCARD FAILED IN ITERATION %d\n", p);
+      165:   39:            }
+      220:   40:      }
+       44:   41:}
+        -:   42:
+       11:   43:      printf("numHandCards passed\n");
+       11:   44:      return 0;
+        -:   45:}
